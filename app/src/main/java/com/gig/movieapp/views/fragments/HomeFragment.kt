@@ -1,8 +1,5 @@
-package com.gig.movieapp
+package com.gig.movieapp.views.fragments
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,18 +28,59 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.gig.movieapp.navigation.MovieViews
 import com.gig.movieapp.ui.theme.BackgroundLight
-import com.gig.movieapp.ui.theme.MovieAppTheme
 
-class MainActivity : ComponentActivity() {
-    @ExperimentalMaterial3Api
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            App {
-                MainContent(it)
+@ExperimentalMaterial3Api
+@Composable
+fun HomeFragment(navController: NavController) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(text = "Movie Selection")
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.LightGray),
+            )
+        }
+    ) {
+        MainContent(
+            navController = navController,
+            modifier = Modifier
+                .padding(top = it.calculateTopPadding())
+        )
+    }
+}
+
+@ExperimentalMaterial3Api
+@Composable
+fun MainContent(
+    navController: NavController,
+    modifier: Modifier,
+    movieList: List<String> = listOf(
+        "Harry Potter",
+        "300",
+        "Spider-man",
+        "Avatar",
+        "Avengers",
+        "La la land",
+        "007: Casino Royale",
+        "Click",
+        "Batman"
+    )
+) {
+    Column(
+        modifier = modifier
+            .padding(horizontal = 12.dp, vertical = 0.dp)
+            .fillMaxSize()
+    ) {
+        LazyColumn {
+            items(items = movieList) {
+                MovieRow(movie = it) { movie ->
+                    navController.navigate(route = MovieViews.DetailFragment.name)
+                }
             }
         }
     }
@@ -50,46 +88,7 @@ class MainActivity : ComponentActivity() {
 
 @ExperimentalMaterial3Api
 @Composable
-fun App(content: @Composable (Modifier) -> Unit) {
-    MovieAppTheme {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = {
-                        Text(text = "Hello from application")
-                    },
-                    colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.LightGray),
-                )
-            }
-        ) {
-            content(
-                Modifier
-                    .padding(bottom = it.calculateBottomPadding(), top = it.calculateTopPadding())
-            )
-        }
-    }
-}
-
-@Composable
-fun MainContent(
-    modifier: Modifier,
-    movieList: List<String> = listOf("Hello", "There", "Person")
-) {
-    Column(
-        modifier = modifier
-            .padding(12.dp)
-            .fillMaxSize()
-    ) {
-        LazyColumn {
-            items(items = movieList) {
-                MovieRow(movie = it)
-            }
-        }
-    }
-}
-
-@Composable
-fun MovieRow(movie: String) {
+fun MovieRow(movie: String, onItemClick: (String) -> Unit = {}) {
     Card(
         modifier = Modifier
             .padding(4.dp)
@@ -97,7 +96,8 @@ fun MovieRow(movie: String) {
             .height(130.dp),
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         elevation = CardDefaults.cardElevation(defaultElevation = 6.dp),
-        colors = CardDefaults.cardColors(containerColor = BackgroundLight)
+        colors = CardDefaults.cardColors(containerColor = BackgroundLight),
+        onClick = { onItemClick.invoke(movie) }
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -121,14 +121,5 @@ fun MovieRow(movie: String) {
 
             Text(text = movie, color = Color.Black)
         }
-    }
-}
-
-@ExperimentalMaterial3Api
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    App {
-        MainContent(it)
     }
 }
