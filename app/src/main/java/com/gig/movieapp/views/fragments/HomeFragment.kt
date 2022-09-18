@@ -1,6 +1,5 @@
 package com.gig.movieapp.views.fragments
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -82,7 +81,7 @@ private fun HomeContent(
         LazyColumn {
             items(items = movieList) {
                 MovieRow(movie = it) { movie ->
-                    navController.navigate(route = MovieViews.DetailFragment.name+"/$movie")
+                    navController.navigate(route = MovieViews.DetailFragment.name + "/$movie")
                 }
             }
         }

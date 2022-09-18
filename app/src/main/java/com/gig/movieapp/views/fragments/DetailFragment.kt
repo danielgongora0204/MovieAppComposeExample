@@ -1,11 +1,19 @@
 package com.gig.movieapp.views.fragments
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,8 +37,10 @@ fun DetailFragment(navController: NavController, movieName: String?) {
                             navController.popBackStack()
                         }
                     ) {
-                        Icon(imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Back to Home Screen")
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = "Back to Home Screen"
+                        )
                     }
                 }
             )
@@ -39,8 +49,7 @@ fun DetailFragment(navController: NavController, movieName: String?) {
         Surface(modifier = Modifier.fillMaxSize()) {
             DetailContent(
                 modifier = Modifier
-                    .padding(top = it.calculateTopPadding()),
-                navController = navController
+                    .padding(top = it.calculateTopPadding())
             )
         }
     }
@@ -49,8 +58,7 @@ fun DetailFragment(navController: NavController, movieName: String?) {
 @ExperimentalMaterial3Api
 @Composable
 private fun DetailContent(
-    modifier: Modifier,
-    navController: NavController
+    modifier: Modifier
 ) {
     Column(
         modifier = modifier
