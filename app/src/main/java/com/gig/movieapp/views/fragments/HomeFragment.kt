@@ -1,5 +1,6 @@
 package com.gig.movieapp.views.fragments
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -42,21 +43,23 @@ fun HomeFragment(navController: NavController) {
                 title = {
                     Text(text = "Movie Selection")
                 },
-                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.LightGray),
+                colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Transparent),
             )
         }
     ) {
-        MainContent(
-            navController = navController,
-            modifier = Modifier
-                .padding(top = it.calculateTopPadding())
-        )
+        Surface(modifier = Modifier.fillMaxSize()) {
+            HomeContent(
+                navController = navController,
+                modifier = Modifier
+                    .padding(top = it.calculateTopPadding())
+            )
+        }
     }
 }
 
 @ExperimentalMaterial3Api
 @Composable
-fun MainContent(
+private fun HomeContent(
     navController: NavController,
     modifier: Modifier,
     movieList: List<String> = listOf(
@@ -79,7 +82,7 @@ fun MainContent(
         LazyColumn {
             items(items = movieList) {
                 MovieRow(movie = it) { movie ->
-                    navController.navigate(route = MovieViews.DetailFragment.name)
+                    navController.navigate(route = MovieViews.DetailFragment.name+"/$movie")
                 }
             }
         }
@@ -88,7 +91,7 @@ fun MainContent(
 
 @ExperimentalMaterial3Api
 @Composable
-fun MovieRow(movie: String, onItemClick: (String) -> Unit = {}) {
+private fun MovieRow(movie: String, onItemClick: (String) -> Unit = {}) {
     Card(
         modifier = Modifier
             .padding(4.dp)
