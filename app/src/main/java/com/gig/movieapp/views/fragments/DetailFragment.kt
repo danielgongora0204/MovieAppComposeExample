@@ -20,15 +20,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.gig.movieapp.models.Movie
+import com.gig.movieapp.models.getMovies
+import com.gig.movieapp.utilities.extensions.default
 
 @ExperimentalMaterial3Api
 @Composable
-fun DetailFragment(navController: NavController, movieName: String?) {
+fun DetailFragment(navController: NavController, movieId: String?) {
+    val movie = getMovies().find { it.id == movieId }
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = "$movieName")
+                    Text(text = movie?.title.default(""))
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(containerColor = Color.Transparent, scrolledContainerColor = Color.Transparent),
                 navigationIcon = {
@@ -49,7 +53,8 @@ fun DetailFragment(navController: NavController, movieName: String?) {
         Surface(modifier = Modifier.fillMaxSize()) {
             DetailContent(
                 modifier = Modifier
-                    .padding(top = it.calculateTopPadding())
+                    .padding(top = it.calculateTopPadding()),
+                movie
             )
         }
     }
@@ -58,7 +63,8 @@ fun DetailFragment(navController: NavController, movieName: String?) {
 @ExperimentalMaterial3Api
 @Composable
 private fun DetailContent(
-    modifier: Modifier
+    modifier: Modifier,
+    movie: Movie? = null
 ) {
     Column(
         modifier = modifier
@@ -67,6 +73,6 @@ private fun DetailContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(text = "Hello From Details")
+        Text(text = movie?.plot.default(""))
     }
 }

@@ -1,19 +1,33 @@
 package com.gig.movieapp.widgets
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults.iconButtonColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,7 +78,7 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                 tonalElevation = 4.dp,
                 shadowElevation = 4.dp
             ) {
-                //This es les performant but more flexible. as it allows for it to have
+                // This es les performant but more flexible. as it allows for it to have
                 // inner composables and a defined state for its painter, since it allows more functionality
                 /*SubcomposeAsyncImage(
                     model = (movie?.images?.get(0)).default(""),
@@ -73,7 +87,7 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                     },
                     contentDescription = "Image Poster"
                 )*/
-                //This is better for performance however its painter lacks a state
+                // This is better for performance however its painter lacks a state
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data((movie?.images?.get(0)).default(""))
@@ -87,20 +101,20 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                         viewportHeight = Icons.Default.Image.viewportHeight,
                         name = Icons.Default.Image.name,
                         tintColor = Color.LightGray,
-                        autoMirror =  Icons.Default.Image.autoMirror,
-                        content = { _, _ -> RenderVectorGroup(group =  Icons.Default.Image.root) }
+                        autoMirror = Icons.Default.Image.autoMirror,
+                        content = { _, _ -> RenderVectorGroup(group = Icons.Default.Image.root) }
                     ),
                     contentDescription = "Image Poster",
                     contentScale = ContentScale.Crop,
                 )
             }
             Column(modifier = Modifier.padding(vertical = 12.dp, horizontal = 0.dp)) {
-                Text( modifier = Modifier.padding(vertical = 5.dp, horizontal = 0.dp),text = movie?.title.default("Movie"), style = MaterialTheme.typography.titleLarge)
+                Text(modifier = Modifier.padding(vertical = 5.dp, horizontal = 0.dp), text = movie?.title.default("Movie"), style = MaterialTheme.typography.titleLarge)
                 Text(text = "Director: ${movie?.director.default("")}", style = MaterialTheme.typography.bodySmall)
                 Text(text = "Released: ${movie?.year.default("")}", style = MaterialTheme.typography.bodySmall)
 
                 ExpandedMovieInfo(modifier = Modifier.wrapContentSize(), isExpanded = expanded, movieDescription = movie?.plot.default(""))
-                
+
                 IconButton(
                     modifier = Modifier
                         .padding(0.dp)
@@ -113,14 +127,12 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                     }
                 ) {
                     Icon(
-                        imageVector = if(expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                        imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                         contentDescription = "Down Arrow"
                     )
                 }
             }
-
         }
-
     }
 }
 @Composable
