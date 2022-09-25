@@ -60,7 +60,7 @@ private fun HomeContent(
         LazyColumn {
             items(items = movieList) {
                 MovieRow(movie = it) { movie ->
-                    navController.navigate(route = MovieViews.DetailFragment.name + "/$movie")
+                    navController.navigate(route = "${MovieViews.DetailFragment.name}/$movie")
                 }
             }
         }

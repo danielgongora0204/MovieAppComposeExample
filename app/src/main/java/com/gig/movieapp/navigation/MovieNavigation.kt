@@ -19,7 +19,7 @@ fun MovieNavigation() {
             HomeFragment(navController = navController)
         }
 
-        composable(MovieViews.DetailFragment.name + "/{movie}", arguments = listOf(navArgument(name = "movie") { type = NavType.StringType })) {
+        composable("${MovieViews.DetailFragment.name}/{movie}", arguments = listOf(navArgument(name = "movie") { type = NavType.StringType })) {
             DetailFragment(navController = navController, it.arguments?.getString("movie"))
         }
     }
