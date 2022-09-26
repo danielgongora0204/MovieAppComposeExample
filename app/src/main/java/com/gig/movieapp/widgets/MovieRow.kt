@@ -27,13 +27,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import coil.transform.RoundedCornersTransformation
-import com.gig.movieapp.components.RatingBar
 import com.gig.movieapp.models.Movie
 import com.gig.movieapp.ui.theme.BackgroundLight
 import com.gig.movieapp.utilities.extensions.default
@@ -112,6 +113,7 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                         modifier = Modifier.width(60.dp),
                         text = if (expanded) movie?.genre.default("") else movie?.genre.default("").substring(0, movie?.genre.default("").length.coerceAtMost(10)),
                         style = MaterialTheme.typography.bodySmall,
+                        textAlign = TextAlign.Left,
                         color = Color.DarkGray
                     )
                     Text(
@@ -128,12 +130,12 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                     //RatingBar(modifier = Modifier.height(15.dp), rating = movie?.rating.default(0f), color = MaterialTheme.colorScheme.primary)
                 }
             }
-            Column(modifier = Modifier.padding(vertical = 12.dp, horizontal = 0.dp)) {
+            Column(modifier = Modifier.padding(0.dp, 12.dp, 0.dp, 0.dp)) {
                 Text(modifier = Modifier.padding(vertical = 5.dp, horizontal = 0.dp), text = movie?.title.default("Movie"), style = MaterialTheme.typography.titleLarge)
                 Text(text = "Director: ${movie?.director.default("")}", style = MaterialTheme.typography.bodyMedium)
                 Text(text = "Released: ${movie?.year.default("")}", style = MaterialTheme.typography.bodyMedium)
 
-                ExpandedMovieInfo(modifier = Modifier.wrapContentSize(), isExpanded = expanded, moviePlot = movie?.plot.default(""))
+                ExpandableMovieInfo(modifier = Modifier.wrapContentSize(), isExpanded = expanded, movieActor = movie?.actors.default(""))
 
                 IconButton(
                     modifier = Modifier
@@ -153,18 +155,35 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                 }
             }
         }
+
+        ExpandableMoviePlot(Modifier, isExpanded = expanded, moviePlot = movie?.plot.default(""))
     }
 }
 
 @Composable
-fun ExpandedMovieInfo(modifier: Modifier = Modifier, isExpanded: Boolean = false, moviePlot: String = "", strin: String = "") {
+fun ExpandableMovieInfo(modifier: Modifier = Modifier, isExpanded: Boolean = false, movieActor: String = "") {
     AnimatedVisibility(visible = isExpanded) {
-        Column(modifier = modifier.padding(0.dp, 4.dp, 4.dp , 4.dp)) {
-            Text( buildAnnotatedString {
+        Column(modifier = modifier.padding(0.dp, 0.dp, 4.dp , 4.dp)) {
+            Text(text = "Actors: $movieActor", style = MaterialTheme.typography.bodyMedium)
+        }
+    }
+}
 
+@Composable
+fun ExpandableMoviePlot(modifier: Modifier = Modifier, isExpanded: Boolean = false, moviePlot: String = ""){
+    AnimatedVisibility(visible = isExpanded) {
+        Row(
+            modifier = Modifier
+                .wrapContentHeight()
+                .fillMaxWidth()
+                .padding(12.dp, 0.dp, 12.dp, 12.dp),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.Start
+        ) {
+            Text( buildAnnotatedString {
                 this.withStyle(
                     style = SpanStyle(
-                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                        fontSize = 12.sp,
                         fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
                         letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
                         fontSynthesis = MaterialTheme.typography.bodySmall.fontSynthesis,
@@ -194,8 +213,6 @@ fun ExpandedMovieInfo(modifier: Modifier = Modifier, isExpanded: Boolean = false
                     append(moviePlot)
                 }
             })
-            Text(text = strin)
-
         }
     }
 }
