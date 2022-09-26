@@ -4,6 +4,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -29,10 +30,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -59,8 +56,7 @@ import com.gig.movieapp.utilities.extensions.default
 @Preview
 @ExperimentalMaterial3Api
 @Composable
-fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
+fun MovieRow(movie: Movie? = null, expanded: Boolean = false, expandedButtonEnabled: Boolean = true, movieTitleVisibility: Boolean = true, onExpandedClick: () -> Unit = {}, onItemClick: (String) -> Unit = {}) {
 
     Card(
         modifier = Modifier
@@ -118,10 +114,8 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                         contentScale = ContentScale.Crop,
                     )
                 }
-                Divider(
-                    modifier = Modifier
-                        .height(4.dp)
-                        .width(0.dp)
+                Spacer(
+                    modifier = Modifier.height(4.dp)
                 )
                 Row(
                     modifier = Modifier
@@ -139,46 +133,41 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                         text = if (expanded) String() else "...",
                         style = MaterialTheme.typography.bodySmall, color = Color.DarkGray, maxLines = 1
                     )
-                    Divider(
-                        modifier = Modifier
-                            .height(0.dp)
-                            .width(5.dp)
-                    )
+                    Spacer(modifier = Modifier.width(5.dp))
                     Icon(modifier = Modifier.height(15.dp), imageVector = Icons.Default.Star, contentDescription = "Rating", tint = MaterialTheme.colorScheme.primary)
-                    Divider(
-                        modifier = Modifier
-                            .height(0.dp)
-                            .width(3.dp)
-                    )
+                    Spacer(modifier = Modifier.width(3.dp))
                     Text(text = "${movie?.rating.default(0f)}", style = MaterialTheme.typography.bodySmall, color = Color.DarkGray)
-                    // RatingBar(modifier = Modifier.height(15.dp), rating = movie?.rating.default(0f), color = MaterialTheme.colorScheme.primary)
                 }
             }
             Column(modifier = Modifier.padding(0.dp, 12.dp, 0.dp, 0.dp)) {
-                Text(modifier = Modifier.padding(vertical = 5.dp, horizontal = 0.dp), text = movie?.title.default("Movie"), style = MaterialTheme.typography.titleLarge)
+                if (movieTitleVisibility) {
+                    Text(modifier = Modifier.padding(vertical = 5.dp, horizontal = 0.dp), text = movie?.title.default("Movie"), style = MaterialTheme.typography.titleLarge)
+                }
                 Text(text = "Director: ${movie?.director.default("")}", style = MaterialTheme.typography.bodyMedium)
                 Text(text = "Released: ${movie?.year.default("")}", style = MaterialTheme.typography.bodyMedium)
                 Text(text = "Actors: ${movie?.actors.default("")}", style = MaterialTheme.typography.bodyMedium)
             }
         }
         ExpandableMoviePlot(Modifier, isExpanded = expanded, moviePlot = movie?.plot.default(""))
-        IconButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(30.dp)
-                .padding(0.dp, 0.dp, 0.dp, 5.dp),
-            colors = iconButtonColors(
-                contentColor = Color.DarkGray
-            ),
-            onClick = {
-                expanded = !expanded
+        if (expandedButtonEnabled) {
+            IconButton(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(30.dp)
+                    .padding(0.dp, 0.dp, 0.dp, 5.dp),
+                colors = iconButtonColors(
+                    contentColor = Color.DarkGray
+                ),
+                onClick = onExpandedClick
+            ) {
+                Icon(
+                    imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                    contentDescription = "Down Arrow"
+                )
             }
-        ) {
-            Icon(
-                imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                contentDescription = "Down Arrow"
-            )
+            return@Card
         }
+        Spacer(modifier = Modifier.height(8.dp))
     }
 }
 
@@ -186,13 +175,7 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
 fun ExpandableMoviePlot(modifier: Modifier = Modifier, isExpanded: Boolean = false, moviePlot: String = "") {
     AnimatedVisibility(visible = isExpanded) {
         Column(modifier = Modifier.padding(12.dp, 3.dp, 12.dp, 5.dp)) {
-            Divider(
-                modifier = Modifier
-                    .height(1.dp)
-                    .fillMaxWidth(0.98f)
-                    .align(Alignment.CenterHorizontally),
-                color = Color.LightGray
-            )
+            Divider()
             Row(
                 modifier = modifier
                     .wrapContentHeight()
