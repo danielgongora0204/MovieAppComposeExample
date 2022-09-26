@@ -153,7 +153,7 @@ fun getMovies(): List<Movie> {
             genre = "Crime, Drama, Thriller",
             director = "N/A",
             actors = "Bryan Cranst" +
-                    "on, Anna Gunn, Aaron Paul, Dean Norris",
+                "on, Anna Gunn, Aaron Paul, Dean Norris",
             plot = "A high school chemistry teacher diagnosed with inoperable lung cancer turns to manufacturing and selling methamphetamine in order to secure his family's financial future.",
             poster = "http://ia.media-imdb.com/images/M/MV5BMTQ0ODYzODc0OV5BMl5BanBnXkFtZTgwMDk3OTcyMDE@._V1_SX300.jpg",
             images = listOf(

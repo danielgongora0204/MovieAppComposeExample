@@ -1,7 +1,16 @@
 package com.gig.movieapp.widgets
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -9,8 +18,16 @@ import androidx.compose.material.icons.filled.Image
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults.iconButtonColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -101,9 +118,11 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                         contentScale = ContentScale.Crop,
                     )
                 }
-                Divider(modifier = Modifier
-                    .height(4.dp)
-                    .width(0.dp))
+                Divider(
+                    modifier = Modifier
+                        .height(4.dp)
+                        .width(0.dp)
+                )
                 Row(
                     modifier = Modifier
                         .wrapContentSize(),
@@ -118,101 +137,106 @@ fun MovieRow(movie: Movie? = null, onItemClick: (String) -> Unit = {}) {
                     )
                     Text(
                         text = if (expanded) String() else "...",
-                        style = MaterialTheme.typography.bodySmall, color = Color.DarkGray, maxLines = 1)
-                    Divider(modifier = Modifier
-                        .height(0.dp)
-                        .width(5.dp))
+                        style = MaterialTheme.typography.bodySmall, color = Color.DarkGray, maxLines = 1
+                    )
+                    Divider(
+                        modifier = Modifier
+                            .height(0.dp)
+                            .width(5.dp)
+                    )
                     Icon(modifier = Modifier.height(15.dp), imageVector = Icons.Default.Star, contentDescription = "Rating", tint = MaterialTheme.colorScheme.primary)
-                    Divider(modifier = Modifier
-                        .height(0.dp)
-                        .width(3.dp))
+                    Divider(
+                        modifier = Modifier
+                            .height(0.dp)
+                            .width(3.dp)
+                    )
                     Text(text = "${movie?.rating.default(0f)}", style = MaterialTheme.typography.bodySmall, color = Color.DarkGray)
-                    //RatingBar(modifier = Modifier.height(15.dp), rating = movie?.rating.default(0f), color = MaterialTheme.colorScheme.primary)
+                    // RatingBar(modifier = Modifier.height(15.dp), rating = movie?.rating.default(0f), color = MaterialTheme.colorScheme.primary)
                 }
             }
             Column(modifier = Modifier.padding(0.dp, 12.dp, 0.dp, 0.dp)) {
                 Text(modifier = Modifier.padding(vertical = 5.dp, horizontal = 0.dp), text = movie?.title.default("Movie"), style = MaterialTheme.typography.titleLarge)
                 Text(text = "Director: ${movie?.director.default("")}", style = MaterialTheme.typography.bodyMedium)
                 Text(text = "Released: ${movie?.year.default("")}", style = MaterialTheme.typography.bodyMedium)
-
-                ExpandableMovieInfo(modifier = Modifier.wrapContentSize(), isExpanded = expanded, movieActor = movie?.actors.default(""))
-
-                IconButton(
-                    modifier = Modifier
-                        .padding(0.dp)
-                        .size(30.dp),
-                    colors = iconButtonColors(
-                        contentColor = Color.DarkGray
-                    ),
-                    onClick = {
-                        expanded = !expanded
-                    }
-                ) {
-                    Icon(
-                        imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
-                        contentDescription = "Down Arrow"
-                    )
-                }
+                Text(text = "Actors: ${movie?.actors.default("")}", style = MaterialTheme.typography.bodyMedium)
             }
         }
-
         ExpandableMoviePlot(Modifier, isExpanded = expanded, moviePlot = movie?.plot.default(""))
-    }
-}
-
-@Composable
-fun ExpandableMovieInfo(modifier: Modifier = Modifier, isExpanded: Boolean = false, movieActor: String = "") {
-    AnimatedVisibility(visible = isExpanded) {
-        Column(modifier = modifier.padding(0.dp, 0.dp, 4.dp , 4.dp)) {
-            Text(text = "Actors: $movieActor", style = MaterialTheme.typography.bodyMedium)
+        IconButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(30.dp)
+                .padding(0.dp, 0.dp, 0.dp, 5.dp),
+            colors = iconButtonColors(
+                contentColor = Color.DarkGray
+            ),
+            onClick = {
+                expanded = !expanded
+            }
+        ) {
+            Icon(
+                imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                contentDescription = "Down Arrow"
+            )
         }
     }
 }
 
 @Composable
-fun ExpandableMoviePlot(modifier: Modifier = Modifier, isExpanded: Boolean = false, moviePlot: String = ""){
+fun ExpandableMoviePlot(modifier: Modifier = Modifier, isExpanded: Boolean = false, moviePlot: String = "") {
     AnimatedVisibility(visible = isExpanded) {
-        Row(
-            modifier = Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(12.dp, 0.dp, 12.dp, 12.dp),
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.Start
-        ) {
-            Text( buildAnnotatedString {
-                this.withStyle(
-                    style = SpanStyle(
-                        fontSize = 12.sp,
-                        fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
-                        letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                        fontSynthesis = MaterialTheme.typography.bodySmall.fontSynthesis,
-                        fontFamily = MaterialTheme.typography.bodySmall.fontFamily,
-                        baselineShift = MaterialTheme.typography.bodySmall.baselineShift,
-                        textGeometricTransform = MaterialTheme.typography.bodySmall.textGeometricTransform,
-                        textDecoration = MaterialTheme.typography.bodySmall.textDecoration,
-                        color = Color.DarkGray,
-                        fontWeight = FontWeight.Bold
-                    )
-                ){
-                    append("Plot: ")
-                }
-                this.withStyle(
-                    style = SpanStyle(
-                        fontSize = MaterialTheme.typography.bodySmall.fontSize,
-                        fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
-                        letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
-                        fontSynthesis = MaterialTheme.typography.bodySmall.fontSynthesis,
-                        fontFamily = MaterialTheme.typography.bodySmall.fontFamily,
-                        baselineShift = MaterialTheme.typography.bodySmall.baselineShift,
-                        textGeometricTransform = MaterialTheme.typography.bodySmall.textGeometricTransform,
-                        textDecoration = MaterialTheme.typography.bodySmall.textDecoration,
-                        color = Color.DarkGray,
-                    )
-                ){
-                    append(moviePlot)
-                }
-            })
+        Column(modifier = Modifier.padding(12.dp, 3.dp, 12.dp, 5.dp)) {
+            Divider(
+                modifier = Modifier
+                    .height(1.dp)
+                    .fillMaxWidth(0.98f)
+                    .align(Alignment.CenterHorizontally),
+                color = Color.LightGray
+            )
+            Row(
+                modifier = modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp, 0.dp, 0.dp),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.Start
+            ) {
+                Text(
+                    buildAnnotatedString {
+                        this.withStyle(
+                            style = SpanStyle(
+                                fontSize = 12.sp,
+                                fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
+                                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                                fontSynthesis = MaterialTheme.typography.bodySmall.fontSynthesis,
+                                fontFamily = MaterialTheme.typography.bodySmall.fontFamily,
+                                baselineShift = MaterialTheme.typography.bodySmall.baselineShift,
+                                textGeometricTransform = MaterialTheme.typography.bodySmall.textGeometricTransform,
+                                textDecoration = MaterialTheme.typography.bodySmall.textDecoration,
+                                color = Color.DarkGray,
+                                fontWeight = FontWeight.Bold
+                            )
+                        ) {
+                            append("Plot: ")
+                        }
+                        this.withStyle(
+                            style = SpanStyle(
+                                fontSize = MaterialTheme.typography.bodySmall.fontSize,
+                                fontStyle = MaterialTheme.typography.bodySmall.fontStyle,
+                                letterSpacing = MaterialTheme.typography.bodySmall.letterSpacing,
+                                fontSynthesis = MaterialTheme.typography.bodySmall.fontSynthesis,
+                                fontFamily = MaterialTheme.typography.bodySmall.fontFamily,
+                                baselineShift = MaterialTheme.typography.bodySmall.baselineShift,
+                                textGeometricTransform = MaterialTheme.typography.bodySmall.textGeometricTransform,
+                                textDecoration = MaterialTheme.typography.bodySmall.textDecoration,
+                                color = Color.DarkGray,
+                            )
+                        ) {
+                            append(moviePlot)
+                        }
+                    }
+                )
+            }
         }
     }
 }
